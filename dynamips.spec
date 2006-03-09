@@ -17,7 +17,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Cisco 7200 Simulator.
 
 %description -l pl
-Symulator Cisco 7200
+Symulator Cisco 7200.
 
 %prep
 %setup -q
@@ -36,7 +36,7 @@ ARCH=nojit
 %{__make} \
 	DYNAMIPS_ARCH=$ARCH \
 	CC="%{__cc}" \
-	LD=%{__ld}
+	LD="%{__ld}"
 
 %install
 rm -rf $RPM_BUILD_ROOT

@@ -1,5 +1,5 @@
 Summary:	Cisco 7200 Simulator
-Summary(pl):	Symulator Cisco 7200
+Summary(pl.UTF-8):   Symulator Cisco 7200
 Name:		dynamips
 Version:	0.2.4
 Release:	0.1
@@ -16,7 +16,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %description
 Cisco 7200 Simulator.
 
-%description -l pl
+%description -l pl.UTF-8
 Symulator Cisco 7200.
 
 %prep

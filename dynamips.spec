@@ -1,12 +1,13 @@
 Summary:	Cisco 7200 Simulator
 Summary(pl.UTF-8):	Symulator Cisco 7200
 Name:		dynamips
-Version:	0.2.4
+Version:	0.2.5
 Release:	0.1
 License:	GPL
 Group:		Applications/Emulators
 Source0:	http://www.ipflow.utc.fr/dynamips/%{name}-%{version}.tar.gz
-# Source0-md5:	7b5ba42bbb466cb057bba1bc855476a9
+# Source0-md5:	b87ef442f7537373ccbe69c3f6dca301
+Patch0:		%{name}-Makefile.patch
 URL:		http://www.ipflow.utc.fr/index.php/Cisco_7200_Simulator
 BuildRequires:	elfutils-devel
 BuildRequires:	flex
@@ -21,6 +22,7 @@ Symulator Cisco 7200.
 
 %prep
 %setup -q
+%patch0 -p0
 
 %build
 %ifarch %{x8664}

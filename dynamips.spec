@@ -2,7 +2,7 @@ Summary:	Cisco 7200 Simulator
 Summary(pl.UTF-8):	Symulator Cisco 7200
 Name:		dynamips
 Version:	0.2.7
-Release:	0.2
+Release:	0.3
 License:	GPL
 Group:		Applications/Emulators
 Source0:	http://www.ipflow.utc.fr/dynamips/%{name}-%{version}.tar.gz
@@ -45,14 +45,16 @@ ARCH=nojit
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_bindir},%{_desktopdir}}
-
-install dynamips $RPM_BUILD_ROOT%{_bindir}
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT \
+	PREFIX="%{_prefix}"
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc README ChangeLog TODO
-%attr(755,root,root) %{_bindir}/%{name}
+%doc README README.hypervisor ChangeLog TODO 
+%attr(755,root,root) %{_bindir}/*
+%{_mandir}/man1/*.1*
+%{_mandir}/man7/*.7*

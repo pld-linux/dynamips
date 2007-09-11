@@ -1,6 +1,22 @@
 --- Makefile	2007-05-26 11:52:33.000000000 +0200
-+++ dynamips-0.2.7/Makefile	2007-09-11 21:15:40.508475542 +0200
-@@ -32,7 +32,7 @@
++++ dynamips-0.2.7/Makefile	2007-09-11 21:59:47.013372947 +0200
+@@ -19,8 +19,14 @@
+ VERSION=$(VERSION_TRAIN)$(VERSION_SUB)
+ VERSION_DEV=$(VERSION_TRAIN)-$(shell date +%Y%m%d-%H)
+ 
++DESTDIR=
++PREFIX=/usr/local
++BINDIR=$(PREFIX)/bin
++DATADIR=$(PREFIX)/share
++MANDIR=$(DATADIR)/man
++SYSCONFIGDIR=$(PREFIX)/etc
++
+ # Executable binary extension
+-DESTDIR?=/usr
+ BIN_EXT?=
+ 
+ CC?=gcc
+@@ -32,7 +38,7 @@
  MIPS64_ARCH_INC_FILE=\"mips64_$(DYNAMIPS_ARCH)_trans.h\"
  PPC32_ARCH_INC_FILE=\"ppc32_$(DYNAMIPS_ARCH)_trans.h\"
  
@@ -9,20 +25,21 @@
  	-DJIT_ARCH=\"$(DYNAMIPS_ARCH)\" -DJIT_CPU=CPU_$(DYNAMIPS_ARCH) \
  	-DMIPS64_ARCH_INC_FILE=$(MIPS64_ARCH_INC_FILE) \
  	-DPPC32_ARCH_INC_FILE=$(PPC32_ARCH_INC_FILE) \
-@@ -51,9 +51,9 @@
+@@ -51,10 +57,9 @@
  else
  ifeq ($(shell uname), Linux)
     PTHREAD_LIBS?=-lpthread
 -#   PCAP_LIB=-lpcap
 -   CFLAGS+=-I/usr/include -I. $(PTHREAD_CFLAGS)
 -   LIBS=-L/usr/lib -L. /usr/lib/libelf.a $(PTHREAD_LIBS)
+-   DESTDIR=/usr
 +   PCAP_LIB=-lpcap
 +   CFLAGS+=-I. $(PTHREAD_CFLAGS)
 +   LIBS=-L. -lelf $(PTHREAD_LIBS)
-    DESTDIR=/usr
  else
  ifeq ($(shell uname -s), Darwin)
-@@ -201,15 +201,15 @@
+    CFLAGS+=-I/usr/local/include -mdynamic-no-pic -D_FILE_OFFSET_BITS=64
+@@ -201,15 +206,15 @@
  $(PROG): mips64_microcode_dump.inc ppc32_microcode_dump.inc \
  	$(LEX_C) $(C_OBJS) $(A_OBJS)
  	@echo "Linking $@"
@@ -41,7 +58,7 @@
  
  mips64_microcode_dump.inc: rom2c$(BIN_EXT) mips64_microcode
  	@./rom2c mips64_microcode mips64_microcode_dump.inc 0xbfc00000
-@@ -219,7 +219,7 @@
+@@ -219,7 +224,7 @@
  
  asmdefs$(BIN_EXT): asmdefs.c mips64.h
  	@echo "Linking $@"
@@ -50,7 +67,7 @@
  
  asmdefs.h: asmdefs$(BIN_EXT)
  	@echo "Building assembly definitions header file"
-@@ -227,7 +227,7 @@
+@@ -227,15 +232,15 @@
  
  nvram_export$(BIN_EXT): nvram_export.c
  	@echo "Linking $@"
@@ -59,7 +76,20 @@
  
  install: $(PROG) nvram_export
  	@echo "Installing"
-@@ -261,11 +261,11 @@
+-	install -d $(DESTDIR)/bin $(DESTDIR)/man/man1 $(DESTDIR)/man/man7 $(DESTDIR)/etc
+-	install dynamips nvram_export   $(DESTDIR)/bin
+-	install -m644 dynamips.1        $(DESTDIR)/man/man1
+-	install -m644 nvram_export.1    $(DESTDIR)/man/man1
+-	install -m644 hypervisor_mode.7 $(DESTDIR)/man/man7
++	install -d $(DESTDIR)$(BINDIR) $(DESTDIR)$(MANDIR)/man1 $(DESTDIR)$(MANDIR)/man7 $(DESTDIR)$(SYSCONFIGDIR)/etc
++	install dynamips nvram_export   $(DESTDIR)$(BINDIR)
++	install -m644 dynamips.1        $(DESTDIR)$(MANDIR)/man1
++	install -m644 nvram_export.1    $(DESTDIR)$(MANDIR)/man1
++	install -m644 hypervisor_mode.7 $(DESTDIR)$(MANDIR)/man7
+ # install -m644 example         $(DESTDIR)/etc/dynamips
+ 
+ 
+@@ -261,11 +266,11 @@
  
  .S.o:
  	@echo "Assembling $<"

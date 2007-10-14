@@ -1,55 +1,60 @@
---- Makefile	2007-05-26 11:52:33.000000000 +0200
-+++ dynamips-0.2.7/Makefile	2007-09-11 21:59:47.013372947 +0200
-@@ -19,8 +19,14 @@
- VERSION=$(VERSION_TRAIN)$(VERSION_SUB)
+--- dynamips-0.2.8-RC2/Makefile.b	2007-10-14 16:35:38.356723252 +0200
++++ dynamips-0.2.8-RC2/Makefile	2007-10-14 16:42:22.040225336 +0200
+@@ -23,8 +23,13 @@
  VERSION_DEV=$(VERSION_TRAIN)-$(shell date +%Y%m%d-%H)
  
+ # Executable binary extension
+-DESTDIR?=/usr
+-BIN_EXT?=
++
 +DESTDIR=
 +PREFIX=/usr/local
 +BINDIR=$(PREFIX)/bin
 +DATADIR=$(PREFIX)/share
 +MANDIR=$(DATADIR)/man
 +SYSCONFIGDIR=$(PREFIX)/etc
-+
- # Executable binary extension
--DESTDIR?=/usr
- BIN_EXT?=
  
  CC?=gcc
-@@ -32,7 +38,7 @@
+ LD=ld
+@@ -35,7 +40,7 @@
  MIPS64_ARCH_INC_FILE=\"mips64_$(DYNAMIPS_ARCH)_trans.h\"
  PPC32_ARCH_INC_FILE=\"ppc32_$(DYNAMIPS_ARCH)_trans.h\"
  
 -CFLAGS+=-g -Wall -O3 -fomit-frame-pointer \
-+CFLAGS+= $(RPM_CFLAGS) -fomit-frame-pointer \
++CFLAGS+= $(RPM_CFLAGS) -Wall -fomit-frame-pointer \
  	-DJIT_ARCH=\"$(DYNAMIPS_ARCH)\" -DJIT_CPU=CPU_$(DYNAMIPS_ARCH) \
  	-DMIPS64_ARCH_INC_FILE=$(MIPS64_ARCH_INC_FILE) \
  	-DPPC32_ARCH_INC_FILE=$(PPC32_ARCH_INC_FILE) \
-@@ -51,10 +57,9 @@
+@@ -56,10 +61,9 @@
  else
  ifeq ($(shell uname), Linux)
     PTHREAD_LIBS?=-lpthread
 -#   PCAP_LIB=-lpcap
 -   CFLAGS+=-I/usr/include -I. $(PTHREAD_CFLAGS)
--   LIBS=-L/usr/lib -L. /usr/lib/libelf.a $(PTHREAD_LIBS)
+-   LIBS=-L/usr/lib -L. -ldl /usr/lib/libelf.a $(PTHREAD_LIBS)
 -   DESTDIR=/usr
 +   PCAP_LIB=-lpcap
 +   CFLAGS+=-I. $(PTHREAD_CFLAGS)
-+   LIBS=-L. -lelf $(PTHREAD_LIBS)
++   LIBS=-L. -ldl -lelf $(PTHREAD_LIBS)
  else
  ifeq ($(shell uname -s), Darwin)
     CFLAGS+=-I/usr/local/include -mdynamic-no-pic -D_FILE_OFFSET_BITS=64
-@@ -201,15 +206,15 @@
+@@ -218,19 +222,19 @@
  $(PROG): mips64_microcode_dump.inc ppc32_microcode_dump.inc \
  	$(LEX_C) $(C_OBJS) $(A_OBJS)
  	@echo "Linking $@"
 -	@$(CC) -o $@ $(C_OBJS) $(A_OBJS) $(LIBS)
 +	$(CC) -o $@ $(C_OBJS) $(A_OBJS) $(LIBS)
  
- udp_send$(BIN_EXT): udp_send.c net.c
+ udp_send$(BIN_EXT): udp_send.c net.c crc.c
  	@echo "Linking $@"
--	@$(CC) -Wall $(CFLAGS) -o $@ udp_send.c net.c $(LIBS)
-+	$(CC) -Wall $(CFLAGS) -o $@ udp_send.c net.c $(LIBS)
+-	@$(CC) -Wall $(CFLAGS) -o $@ udp_send.c net.c crc.c $(LIBS)
++	$(CC) -Wall $(CFLAGS) -o $@ udp_send.c net.c crc.c $(LIBS)
+ 
+ udp_recv$(BIN_EXT): udp_recv.c net.c crc.c
+ 	@echo "Linking $@"
+-	@$(CC) -Wall $(CFLAGS) -o $@ udp_recv.c net.c crc.c $(LIBS)
++	$(CC) -Wall $(CFLAGS) -o $@ udp_recv.c net.c crc.c $(LIBS)
  
  rom2c$(BIN_EXT): rom2c.c
  	@echo "Linking $@"
@@ -58,7 +63,7 @@
  
  mips64_microcode_dump.inc: rom2c$(BIN_EXT) mips64_microcode
  	@./rom2c mips64_microcode mips64_microcode_dump.inc 0xbfc00000
-@@ -219,7 +224,7 @@
+@@ -240,7 +244,7 @@
  
  asmdefs$(BIN_EXT): asmdefs.c mips64.h
  	@echo "Linking $@"
@@ -67,7 +72,7 @@
  
  asmdefs.h: asmdefs$(BIN_EXT)
  	@echo "Building assembly definitions header file"
-@@ -227,15 +232,15 @@
+@@ -248,15 +252,15 @@
  
  nvram_export$(BIN_EXT): nvram_export.c
  	@echo "Linking $@"
@@ -89,7 +94,7 @@
  # install -m644 example         $(DESTDIR)/etc/dynamips
  
  
-@@ -261,11 +266,11 @@
+@@ -282,11 +286,11 @@
  
  .S.o:
  	@echo "Assembling $<"

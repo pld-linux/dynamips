@@ -5,7 +5,7 @@ Summary:	Cisco 7200 Simulator
 Summary(pl.UTF-8):	Symulator Cisco 7200
 Name:		dynamips
 Version:	0.2.8
-Release:	0.%{_rc}.1
+Release:	0.%{_rc}.2
 License:	GPL
 Group:		Applications/Emulators
 Source0:	http://www.ipflow.utc.fr/dynamips/%{name}-%{version}-%{_rc}.tar.gz

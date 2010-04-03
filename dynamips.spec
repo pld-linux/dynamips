@@ -1,14 +1,13 @@
-#
-%define		_rc	RC2
-#
+%define		subver	RC2
+%define		rel		3
 Summary:	Cisco 7200 Simulator
 Summary(pl.UTF-8):	Symulator Cisco 7200
 Name:		dynamips
 Version:	0.2.8
-Release:	0.%{_rc}.2
+Release:	0.%{subver}.%{rel}
 License:	GPL
 Group:		Applications/Emulators
-Source0:	http://www.ipflow.utc.fr/dynamips/%{name}-%{version}-%{_rc}.tar.gz
+Source0:	http://www.ipflow.utc.fr/dynamips/%{name}-%{version}-%{subver}.tar.gz
 # Source0-md5:	8d12d28684d164fe3312a3fe43c84d2e
 Patch0:		%{name}-Makefile.patch
 Patch1:		%{name}-debian.patch
@@ -25,7 +24,7 @@ Cisco 7200 Simulator.
 Symulator Cisco 7200.
 
 %prep
-%setup -q -n %{name}-%{version}-%{_rc}
+%setup -q -n %{name}-%{version}-%{subver}
 %patch0 -p1
 %patch1 -p1
 
@@ -57,7 +56,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc README README.hypervisor ChangeLog TODO 
+%doc README README.hypervisor ChangeLog TODO
 %attr(755,root,root) %{_bindir}/*
 %{_mandir}/man1/*.1*
 %{_mandir}/man7/*.7*

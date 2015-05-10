@@ -1,5 +1,5 @@
 %define		subver	RC2
-%define		rel		3
+%define		rel	4
 Summary:	Cisco 7200 Simulator
 Summary(pl.UTF-8):	Symulator Cisco 7200
 Name:		dynamips
@@ -11,6 +11,7 @@ Source0:	http://www.ipflow.utc.fr/dynamips/%{name}-%{version}-%{subver}.tar.gz
 # Source0-md5:	8d12d28684d164fe3312a3fe43c84d2e
 Patch0:		%{name}-Makefile.patch
 Patch1:		%{name}-debian.patch
+Patch2:		x32.patch
 URL:		http://www.ipflow.utc.fr/index.php/Cisco_7200_Simulator
 BuildRequires:	elfutils-devel
 BuildRequires:	flex
@@ -27,12 +28,15 @@ Symulator Cisco 7200.
 %setup -q -n %{name}-%{version}-%{subver}
 %patch0 -p1
 %patch1 -p1
+%ifarch x32
+%patch2 -p1
+%endif
 
 %build
 %ifarch %{x8664}
 ARCH=amd64
 %else
-%ifarch %{ix86}
+%ifarch %{ix86} x32
 ARCH=x86
 %else
 ARCH=nojit

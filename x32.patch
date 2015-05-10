@@ -1,0 +1,11 @@
+--- dynamips-0.2.8-RC2/mips64_amd64_trans.h~	2007-10-14 10:43:08.000000000 +0200
++++ dynamips-0.2.8-RC2/mips64_amd64_trans.h	2015-05-10 11:14:19.522295847 +0200
+@@ -53,7 +53,7 @@
+       return;
+    }
+ 
+-   asm volatile ("movq %0,%%r15"::"r"(cpu):
++   asm volatile ("mov %0,%%r15"::"r"(cpu):
+                  "r14","r15","rax","rbx","rcx","rdx","rdi","rsi");
+    jit_code();
+ }

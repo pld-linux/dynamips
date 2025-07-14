@@ -26,10 +26,10 @@ Symulator Cisco 7200.
 
 %prep
 %setup -q -n %{name}-%{version}-%{subver}
-%patch0 -p1
-%patch1 -p1
+%patch -P0 -p1
+%patch -P1 -p1
 %ifarch x32
-%patch2 -p1
+%patch -P2 -p1
 %endif
 
 %build

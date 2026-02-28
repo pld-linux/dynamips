@@ -1,5 +1,5 @@
 %define		subver	RC2
-%define		rel	4
+%define		rel	5
 Summary:	Cisco 7200 Simulator
 Summary(pl.UTF-8):	Symulator Cisco 7200
 Name:		dynamips
